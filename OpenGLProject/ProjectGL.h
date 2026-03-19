@@ -9,6 +9,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
+#include "Structures.h"
 
 #define REFRESHRATE 16
 
@@ -18,48 +19,11 @@ private:
 	//Private member variables and functions
 	float rotation;
 
-	// Vertices
-	struct point3d
-	{
-		float x, y, z;
-	};
-
-	// Colours
-	struct Colour
-	{
-		GLfloat r, g, b;
-	};
-
-	struct Vertex
-	{
-		GLfloat x, y, z;
-	};
-
-	// Faces
-	struct polygon3d
-	{
-		int a;
-		int b;
-		int c;
-	};
-
-	struct Vector3
-	{
-		float x, y, z;
-	};
-
-	struct Camera
-	{
-		Vector3 eye;
-		Vector3 centre;
-		Vector3 up;
-	};
-
 	static Vertex vertices[];
 	static Colour colours[];
 	Camera* camera;
 	point3d* Vertices;
-	colour* Colours;
+	Colour* Colours;
 	polygon3d* indices;
 	int PolygonCount;
 

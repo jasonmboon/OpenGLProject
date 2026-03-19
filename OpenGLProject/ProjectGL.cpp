@@ -70,7 +70,7 @@ void ProjectGL::Display()
 	//DrawRegularPolygon(0.3f, -0.3f, 0.3f, 7);
 
 	glPushMatrix();
-	glRotatef(rotation, 1.0f, 0.0f, 0.0f);
+	glRotatef(rotation, 0.0f, 1.0f, 1.0f);
 	glutWireTeapot(0.1);
 	glPopMatrix();
 
@@ -127,11 +127,6 @@ void ProjectGL::Keyboard(unsigned char key, int x, int y)
 		rotation += 5.0f;
 	}
 }
-
-
-
-
-
 
 
 /// <summary>
@@ -494,10 +489,6 @@ void ProjectGL::ProcessPolygonOBJ()
 
 			pos = InputLine.find(',');
 			indices[index].c = strtof(InputLine.substr(0, pos).c_str(), nullptr);
-			InputLine.erase(0, pos + 1);
-
-			pos = InputLine.find(',');
-			indices[index].d = strtof(InputLine.substr(0, pos).c_str(), nullptr);
 			InputLine.erase(0, pos + 1);
 
 			numPolygons--;

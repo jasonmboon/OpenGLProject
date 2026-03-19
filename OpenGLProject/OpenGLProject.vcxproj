@@ -127,13 +127,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Cube.h" />
     <ClInclude Include="GLUTcallbacks.h" />
     <ClInclude Include="ProjectGL.h" />
+    <ClInclude Include="SceneObject.h" />
+    <ClInclude Include="Structures.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Cube.cpp" />
     <ClCompile Include="GLUTcallbacks.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="ProjectGL.cpp" />
+    <ClCompile Include="SceneObject.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\..\..\40026-Assignment\3DModellingAssignment\3DModellingAssignment\polygon1.txt" />
