@@ -1,5 +1,5 @@
 #pragma once
-#include "ProjectGL.h"
+#include "Structures.h"
 
 class SceneObject
 {
