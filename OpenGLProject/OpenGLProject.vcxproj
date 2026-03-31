@@ -143,8 +143,8 @@
     <ClCompile Include="SceneObject.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\40026-Assignment\3DModellingAssignment\3DModellingAssignment\polygon1.txt" />
-    <Text Include="..\..\..\40026-Assignment\3DModellingAssignment\3DModellingAssignment\pyramid1.txt" />
+    <Text Include="cube.txt" />
+    <Text Include="pyramid.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

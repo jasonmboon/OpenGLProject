@@ -13,24 +13,32 @@
 #define GRAY 0.5f, 0.5f, 0.5f, 1.0f
 #define ORANGE 1.0f, 0.5f, 0.0f, 1.0f
 
-Vertex ProjectGL::indexedVertices[] = { 1, 1, 1, -1, 1, 1, // v0,v1,
-										-1,-1, 1, 1,-1, 1, // v2,v3
-										1,-1,-1, 1, 1,-1, // v4,v5
-										-1, 1,-1, -1,-1,-1 }; // v6,v7
-
-
-Colour ProjectGL::indexedColours[] = { 1, 1, 1, 1, 1, 0, // v0,v1,
-										1, 0, 0, 1, 0, 1, // v2,v3
-										0, 0, 1, 0, 1, 1, // v4,v5
-										0, 1, 0, 0, 0, 0 }; //v6,v7
-
-
-GLushort ProjectGL::indices[] = { 0, 1, 2, 2, 3, 0, // front
-									0, 3, 4, 4, 5, 0, // right
-									0, 5, 6, 6, 1, 0, // top
-									1, 6, 7, 7, 2, 1, // left
-									7, 4, 3, 3, 2, 7, // bottom
-									4, 7, 6, 6, 5, 4 }; // back
+//Vertex ProjectGL::indexedVertices[] = { 1, 1, 1, -1, 1, 1, // v0,v1,
+//										-1,-1, 1, 1,-1, 1, // v2,v3
+//										1,-1,-1, 1, 1,-1, // v4,v5
+//										-1, 1,-1, -1,-1,-1 }; // v6,v7
+//
+////
+////Colour ProjectGL::indexedColours[] = { 1, 1, 1, 1, 1, 0, // v0,v1,
+////										1, 0, 0, 1, 0, 1, // v2,v3
+////										0, 0, 1, 0, 1, 1, // v4,v5
+////										0, 1, 0, 0, 0, 0 }; //v6,v7
+//
+//Colour ProjectGL::indexedColours[] = { 1, 1, 1, 0, 0, 0, // v0,v1,
+//										1, 1 ,1, 0, 0, 0, // v2,v3
+//										1, 1, 1, 0, 0, 0, // v4,v5
+//										1, 1, 1, 0, 0, 0 }; //v6,v7
+//
+//
+//GLushort ProjectGL::indices[] = { 0, 1, 2, 2, 3, 0, // front
+//									0, 3, 4, 4, 5, 0, // right
+//									0, 5, 6, 6, 1, 0, // top
+//									1, 6, 7, 7, 2, 1, // left
+//									7, 4, 3, 3, 2, 7, // bottom
+//									4, 7, 6, 6, 5, 4 }; // back
+Vertex* ProjectGL::indexedVertices = nullptr;
+Colour* ProjectGL::indexedColours = nullptr;
+GLushort* ProjectGL::indices = nullptr;
 
 
 ProjectGL::ProjectGL(int argc, char* argv[])
@@ -55,7 +63,9 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	camera->up = { 0.0f, 1.0f, 0.0f };	
 
 	cube = new Cube(nullptr, 0.0f, 0.0f, 0.0f);
-
+	
+	Cube::Load((char*)"cube.txt");
+	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, 800, 800);
@@ -88,7 +98,6 @@ void ProjectGL::Display()
 		 0.5f, 0.0f, // Bottom Right
 	};
 
-
 	// Clear screen buffer
 	glClear(GL_COLOR_BUFFER_BIT);
 
@@ -98,7 +107,7 @@ void ProjectGL::Display()
 	glPushMatrix();
 
 	glRotatef(rotation, 0.0f, 1.0f, 1.0f);
-	DrawIndexedCubeAlt();
+	DrawIndexedCubeFile();
 	//glutWireTeapot(0.1);
 	//cube->Draw();
 
@@ -253,23 +262,41 @@ void ProjectGL::DrawCube()
 
 void ProjectGL::DrawIndexedCube()
 {
-	glPushMatrix();
+	//glPushMatrix();
 
-	glBegin(GL_TRIANGLES);
-	for (int i=0; i < 36; i++)
-	{
-		glColor3fv((GLfloat*)&indexedColours[indices[i]]);
-		glVertex3fv((GLfloat*)&indexedVertices[indices[i]]);
-	}
-	glEnd();
+	//glBegin(GL_TRIANGLES);
+	//for (int i=0; i < 36; i++)
+	//{
+	//	glColor3fv((GLfloat*)&indexedColours[indices[i]]);
+	//	glVertex3fv((GLfloat*)&indexedVertices[indices[i]]);
+	//}
+	//glEnd();
 
-	glPopMatrix();
+	//glPopMatrix();
 }
 
 void ProjectGL::DrawIndexedCubeAlt()
 {
+	//glEnableClientState(GL_VERTEX_ARRAY);
+	//glEnableClientState(GL_COLOR_ARRAY);
+	//glVertexPointer(3, GL_FLOAT, 0, indexedVertices);
+	//glColorPointer(3, GL_FLOAT, 0, indexedColours);
+
+	//glPushMatrix();
+	//glScalef(0.5f, 0.5f, 0.5f);
+	//glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices);
+	//glPopMatrix();
+
+	//glDisableClientState(GL_COLOR_ARRAY);
+	//glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+void ProjectGL::DrawIndexedCubeFile()
+{
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
+
+
 	glVertexPointer(3, GL_FLOAT, 0, indexedVertices);
 	glColorPointer(3, GL_FLOAT, 0, indexedColours);
 
@@ -278,7 +305,7 @@ void ProjectGL::DrawIndexedCubeAlt()
 	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices);
 	glPopMatrix();
 
+
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
-

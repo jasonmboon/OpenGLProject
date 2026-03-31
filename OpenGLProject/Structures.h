@@ -3,6 +3,8 @@
 #include "gl/GL.h"
 #include "gl/GLU.h"
 #include "GL/freeglut.h"
+#include <iostream>
+#include <fstream>
 
 // Vertices
 struct point3d

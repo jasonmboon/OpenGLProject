@@ -55,11 +55,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\..\..\40026-Assignment\3DModellingAssignment\3DModellingAssignment\polygon1.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
-    <Text Include="..\..\..\40026-Assignment\3DModellingAssignment\3DModellingAssignment\pyramid1.txt">
-      <Filter>Resource Files</Filter>
-    </Text>
+    <Text Include="cube.txt" />
+    <Text Include="pyramid.txt" />
   </ItemGroup>
 </Project>

@@ -18,11 +18,12 @@ private:
 
 	Camera* camera;
 
-	static Vertex indexedVertices[];
-	static Colour indexedColours[];
-	static GLushort indices[];
+	static Vertex* indexedVertices;
+	static Colour* indexedColours;
+	static GLushort* indices;
 
 	Cube* cube;
+	
 
 public:
 	//Constructor and Destructor
@@ -38,4 +39,5 @@ public:
 	//void DrawCubeArray();
 	void DrawIndexedCube();
 	void DrawIndexedCubeAlt();
+	void DrawIndexedCubeFile();
 };
