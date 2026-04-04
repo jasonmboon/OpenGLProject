@@ -5,6 +5,8 @@
 #include "GL/freeglut.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
+#include <string>
 
 // Vertices
 struct point3d

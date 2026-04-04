@@ -36,9 +36,6 @@
 //									1, 6, 7, 7, 2, 1, // left
 //									7, 4, 3, 3, 2, 7, // bottom
 //									4, 7, 6, 6, 5, 4 }; // back
-Vertex* ProjectGL::indexedVertices = nullptr;
-Colour* ProjectGL::indexedColours = nullptr;
-GLushort* ProjectGL::indices = nullptr;
 
 
 ProjectGL::ProjectGL(int argc, char* argv[])
@@ -61,10 +58,25 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	camera->eye = { 0.0f, 0.0f, 1.0f };
 	camera->centre = { 0.0f, 0.0f, 0.0f };
 	camera->up = { 0.0f, 1.0f, 0.0f };	
-
+	
 	cube = new Cube(nullptr, 0.0f, 0.0f, 0.0f);
 	
-	Cube::Load((char*)"cube.txt");
+	//SetFilePath((char*)"pyramid.txt");
+	
+	
+	SetFilePath((char*)"./Other Files/teapota.obj");
+	
+	SetIsObjectFile(true);
+
+	if (GetIsObjectFile())
+	{
+		Cube::LoadObjectFile(GetFilePath());
+	}
+	else{
+		Cube::Load(GetFilePath());
+	}
+
+	setPolygonCount(cube->GetPolyCount());
 	
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -78,7 +90,6 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 
 	glutMainLoop();
 }
-
 
 ProjectGL::~ProjectGL(void)
 {
@@ -107,7 +118,9 @@ void ProjectGL::Display()
 	glPushMatrix();
 
 	glRotatef(rotation, 0.0f, 1.0f, 1.0f);
-	DrawIndexedCubeFile();
+
+	DrawObjFile();
+
 	//glutWireTeapot(0.1);
 	//cube->Draw();
 
@@ -170,111 +183,6 @@ void ProjectGL::DrawGrid(float gridSize, int numLines)
 	glEnd();
 }
 
-void ProjectGL::DrawCube()
-{
-	glBegin(GL_TRIANGLES);
-	// face v0-v1-v2
-	glColor3f(1, 1, 1);
-	glVertex3f(1, 1, 1);
-	glColor3f(1, 1, 0);
-	glVertex3f(-1, 1, 1);
-	glColor3f(1, 0, 0);
-	glVertex3f(-1, -1, 1);
-	// face v2-v3-v0
-	glColor3f(1, 0, 0);
-	glVertex3f(-1, -1, 1);
-	glColor3f(1, 0, 1);
-	glVertex3f(1, -1, 1);
-	glColor3f(1, 1, 1);
-	glVertex3f(1, 1, 1);
-	// face v0-v3-v4
-	glColor3f(1, 1, 1);
-	glVertex3f(1, 1, 1);
-	glColor3f(1, 0, 1);
-	glVertex3f(1, -1, 1);
-	glColor3f(0, 0, 1);
-	glVertex3f(1, -1, -1);
-	// face v4-v5-v0
-	glColor3f(0, 0, 1);
-	glVertex3f(1, -1, -1);
-	glColor3f(0, 1, 1);
-	glVertex3f(1, 1, -1);
-	glColor3f(1, 1, 1);
-	glVertex3f(1, 1, 1);
-	// face v0-v5-v6
-	glColor3f(1, 1, 1);
-	glVertex3f(1, 1, 1);
-	glColor3f(0, 1, 1);
-	glVertex3f(1, 1, -1);
-	glColor3f(0, 1, 0);
-	glVertex3f(-1, 1, -1);
-	// face v6-v1-v0
-	glColor3f(0, 1, 0);
-	glVertex3f(-1, 1, -1);
-	glColor3f(1, 1, 0);
-	glVertex3f(-1, 1, 1);
-	glColor3f(1, 1, 1);
-	glVertex3f(1, 1, 1);
-	// face v1-v6-v7
-	glColor3f(1, 1, 0);
-	glVertex3f(-1, 1, 1);
-	glColor3f(0, 1, 0);
-	glVertex3f(-1, 1, -1);
-	glColor3f(0, 0, 0);
-	glVertex3f(-1, -1, -1);
-	// face v7-v2-v1
-	glColor3f(0, 0, 0);
-	glVertex3f(-1, -1, -1);
-	glColor3f(1, 0, 0);
-	glVertex3f(-1, -1, 1);
-	glColor3f(1, 1, 0);
-	glVertex3f(-1, 1, 1);
-	// face v7-v4-v3
-	glColor3f(0, 0, 0);
-	glVertex3f(-1, -1, -1);
-	glColor3f(0, 0, 1);
-	glVertex3f(1, -1, -1);
-	glColor3f(1, 0, 1);
-	glVertex3f(1, -1, 1);
-	// face v3-v2-v7
-	glColor3f(1, 0, 1);
-	glVertex3f(1, -1, 1);
-	glColor3f(1, 0, 0);
-	glVertex3f(-1, -1, 1);
-	glColor3f(0, 0, 0);
-	glVertex3f(-1, -1, -1);
-	// face v4-v7-v6
-	glColor3f(0, 0, 1);
-	glVertex3f(1, -1, -1);
-	glColor3f(0, 0, 0);
-	glVertex3f(-1, -1, -1);
-	glColor3f(0, 1, 0);
-	glVertex3f(-1, 1, -1);
-	// face v6-v5-v4
-	glColor3f(0, 1, 0);
-	glVertex3f(-1, 1, -1);
-	glColor3f(0, 1, 1);
-	glVertex3f(1, 1, -1);
-	glColor3f(0, 0, 1);
-	glVertex3f(1, -1, -1);
-	glEnd();
-}
-
-void ProjectGL::DrawIndexedCube()
-{
-	//glPushMatrix();
-
-	//glBegin(GL_TRIANGLES);
-	//for (int i=0; i < 36; i++)
-	//{
-	//	glColor3fv((GLfloat*)&indexedColours[indices[i]]);
-	//	glVertex3fv((GLfloat*)&indexedVertices[indices[i]]);
-	//}
-	//glEnd();
-
-	//glPopMatrix();
-}
-
 void ProjectGL::DrawIndexedCubeAlt()
 {
 	//glEnableClientState(GL_VERTEX_ARRAY);
@@ -297,15 +205,34 @@ void ProjectGL::DrawIndexedCubeFile()
 	glEnableClientState(GL_COLOR_ARRAY);
 
 
-	glVertexPointer(3, GL_FLOAT, 0, indexedVertices);
-	glColorPointer(3, GL_FLOAT, 0, indexedColours);
+	glVertexPointer(3, GL_FLOAT, 0, cube->GetVertices());
+	glColorPointer(3, GL_FLOAT, 0, cube->GetColours());
 
 	glPushMatrix();
 	glScalef(0.5f, 0.5f, 0.5f);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices);
+	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, cube->GetIndices());
 	glPopMatrix();
 
 
 	glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+// Draw OpenGl .obj faile using vertex arrays
+void ProjectGL::DrawObjFile()
+{
+	glEnableClientState(GL_VERTEX_ARRAY);
+	//glEnableClientState(GL_COLOR_ARRAY);
+	
+	glVertexPointer(3, GL_FLOAT, 0, cube->GetVertices());
+	//glColorPointer(3, GL_FLOAT, 0, cube->GetColours());
+
+	glPushMatrix();
+	glScalef(0.5f, 0.5f, 0.5f);
+	glDrawElements(GL_TRIANGLES, cube->GetPolyCount(), GL_UNSIGNED_SHORT, cube->GetIndices());
+	glPopMatrix();
+
+
+	//glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
 }

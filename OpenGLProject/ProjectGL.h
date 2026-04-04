@@ -18,17 +18,47 @@ private:
 
 	Camera* camera;
 
-	static Vertex* indexedVertices;
-	static Colour* indexedColours;
-	static GLushort* indices;
+	//Vertex* Cube::indexedVertices;
+	//Colour* Cube::indexedColours;
+	//GLushort* Cube::indices;
+	char* filePath;
+	bool isObjectFile = false;
+	int polygonCount;	
 
 	Cube* cube;
 	
-
 public:
 	//Constructor and Destructor
 	ProjectGL(int argc, char* argv[]);
 	~ProjectGL(void);
+
+	void SetFilePath(char* _filePath) {
+		filePath = _filePath;
+	}
+
+	/// <summary>
+	/// Getters and settings for file path, isObjectFile and polygon count
+	/// </summary>
+	/// <returns></returns>
+	char* GetFilePath(){
+		return filePath;
+	}
+
+	void SetIsObjectFile(bool _isObjectFile) {
+		isObjectFile = _isObjectFile;
+	}
+
+	bool GetIsObjectFile() {
+		return isObjectFile;
+	}
+
+	void setPolygonCount(int _polygonCount) {
+		polygonCount = _polygonCount;
+	}
+
+	int GetPolygonCount() {
+		return polygonCount;
+	}
 
 	void Update();
 	void Display();
@@ -40,4 +70,5 @@ public:
 	void DrawIndexedCube();
 	void DrawIndexedCubeAlt();
 	void DrawIndexedCubeFile();
+	void DrawObjFile();
 };
