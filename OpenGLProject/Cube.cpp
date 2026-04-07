@@ -67,6 +67,7 @@ bool Cube::LoadObjectFile(char* path)
 	numIndices = 0;
 	numColours = 0;
 	numVertices = 0;
+	int numIndicesTotal = 0;
 
 	std::ifstream inFile;
 	inFile.open(path);
@@ -87,17 +88,19 @@ bool Cube::LoadObjectFile(char* path)
 		}
 		else if (prefix == "f")
 		{
-			numIndices += 3; // Assuming triangular faces
+			numIndices++; // Assuming triangular faces
 		}
 	}
+
+	numIndicesTotal = numIndices * 3; // Store original count for later use
 
 	inFile.clear(); // Clear EOF flag
 	inFile.seekg(0); // Return to the beginning of the file
 
 	// Allocate memory for vertices and indices
 	indexedVertices = new Vertex[numVertices];
-	indices = new GLushort[numIndices];
-	indexedColours = new Colour[numIndices/3]; // No colour information in OBJ files
+	indices = new GLushort[numIndices * 3];
+	indexedColours = new Colour[numColours]; // No colour information in OBJ files
 
 	int currentVertexPos = 0;
 	int currentIndexPos = 0;
@@ -129,7 +132,8 @@ bool Cube::LoadObjectFile(char* path)
 
 	inFile.clear(); // Clear EOF flag
 	inFile.seekg(0); // Return to the beginning of the file
-
+	currentIndexPos = 0; 	// Reset index position for reading indices
+	
 	// Read the file again to populate indices
 	if (indices != nullptr)
 	{
@@ -142,16 +146,22 @@ bool Cube::LoadObjectFile(char* path)
 			std::string prefix;
 			iss >> prefix;
 
-			if (currentIndexPos >= numIndices)
+			// Check array bounds before writing to indices
+			if (currentIndexPos >= numIndicesTotal)
 			{
 				std::cerr << "Error: Current index position exceeds allocated memory." << std::endl;
+				std::cout << "Current index position: " << currentIndexPos << ", Number of indices: " << numIndicesTotal << std::endl;
 				break; // Prevent reading beyond allocated memory
 			}
 
-			if (currentIndexPos < numIndices && prefix == "f")
+			// OBJ files are 1-indexed, so we subtract 1 to convert to 0-indexed
+			// Assuming faces are defined as "f v1 v2 v3" and we only care about vertex indices
+			if (currentIndexPos <= numIndicesTotal && prefix == "f")
 			{
 				iss >> v1 >> v2 >> v3;
-				indices[currentIndexPos + 2] = v1 - 1; // OBJ files are 1-indexed
+
+				// OBJ files are 1-indexed
+				indices[currentIndexPos + 2] = v1 - 1; 
 				indices[currentIndexPos + 1] = v2 - 1;
 				indices[currentIndexPos] = v3 - 1;
 				currentIndexPos += 3;

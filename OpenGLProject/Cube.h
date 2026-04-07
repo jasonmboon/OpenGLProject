@@ -18,7 +18,8 @@ public:
 	Vertex* GetVertices() { return indexedVertices; }
 	Colour* GetColours() { return indexedColours; }
 	GLushort* GetIndices() { return indices; }
-	int GetPolyCount() { return numIndices/3; }
+	int GetPolyCount() { return numIndices; }
+	int GetVertexCount() { return numVertices; }
 
 	void Update();
 	void Draw();

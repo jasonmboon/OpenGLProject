@@ -36,7 +36,7 @@
 //									1, 6, 7, 7, 2, 1, // left
 //									7, 4, 3, 3, 2, 7, // bottom
 //									4, 7, 6, 6, 5, 4 }; // back
-
+std::ofstream outFile;
 
 ProjectGL::ProjectGL(int argc, char* argv[])
 {
@@ -61,18 +61,17 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	
 	cube = new Cube(nullptr, 0.0f, 0.0f, 0.0f);
 	
-	//SetFilePath((char*)"pyramid.txt");
-	
-	
-	SetFilePath((char*)"./Other Files/teapota.obj");
-	
+	// Change from true -> OBJ file, false -> text file depending on what you want to display
 	SetIsObjectFile(true);
-
+	
 	if (GetIsObjectFile())
 	{
+		SetFilePath((char*)"./Other Files/teddy.obj"); 
 		Cube::LoadObjectFile(GetFilePath());
 	}
-	else{
+	else
+	{
+		SetFilePath((char*)"pyramid.txt");
 		Cube::Load(GetFilePath());
 	}
 
@@ -119,7 +118,14 @@ void ProjectGL::Display()
 
 	glRotatef(rotation, 0.0f, 1.0f, 1.0f);
 
-	DrawObjFile();
+	if (GetIsObjectFile())
+	{
+		DrawObjFile();
+	}
+	else
+	{
+		DrawIndexedCubeFile();
+	}
 
 	//glutWireTeapot(0.1);
 	//cube->Draw();
@@ -201,6 +207,7 @@ void ProjectGL::DrawIndexedCubeAlt()
 
 void ProjectGL::DrawIndexedCubeFile()
 {
+	int indexedIndicesCount = cube->GetPolyCount();	
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 
@@ -210,7 +217,8 @@ void ProjectGL::DrawIndexedCubeFile()
 
 	glPushMatrix();
 	glScalef(0.5f, 0.5f, 0.5f);
-	glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, cube->GetIndices());
+
+	glDrawElements(GL_TRIANGLES, indexedIndicesCount, GL_UNSIGNED_SHORT, cube->GetIndices());
 	glPopMatrix();
 
 
@@ -225,13 +233,14 @@ void ProjectGL::DrawObjFile()
 	//glEnableClientState(GL_COLOR_ARRAY);
 	
 	glVertexPointer(3, GL_FLOAT, 0, cube->GetVertices());
+
 	//glColorPointer(3, GL_FLOAT, 0, cube->GetColours());
 
 	glPushMatrix();
-	glScalef(0.5f, 0.5f, 0.5f);
-	glDrawElements(GL_TRIANGLES, cube->GetPolyCount(), GL_UNSIGNED_SHORT, cube->GetIndices());
+	glScalef(0.1f, 0.1f, 0.1f);
+	glDrawElements(GL_TRIANGLES, cube->GetPolyCount()*3, GL_UNSIGNED_SHORT, cube->GetIndices());
+	int polyCount = cube->GetPolyCount();
 	glPopMatrix();
-
 
 	//glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_VERTEX_ARRAY);
