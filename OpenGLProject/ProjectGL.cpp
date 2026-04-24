@@ -62,11 +62,11 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	cube = new Cube(nullptr, 0.0f, 0.0f, 0.0f);
 	
 	// Change from true -> OBJ file, false -> text file depending on what you want to display
-	SetIsObjectFile(true);
+	SetIsObjectFile(false);
 	
 	if (GetIsObjectFile())
 	{
-		SetFilePath((char*)"./Other Files/teddy.obj"); 
+		SetFilePath((char*)"./Other Files/teapota.obj"); 
 		Cube::LoadObjectFile(GetFilePath());
 	}
 	else
@@ -120,6 +120,7 @@ void ProjectGL::Display()
 
 	if (GetIsObjectFile())
 	{
+		//DrawIndexedCubeFile1();
 		DrawObjFile();
 	}
 	else
@@ -231,7 +232,7 @@ void ProjectGL::DrawObjFile()
 {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	//glEnableClientState(GL_COLOR_ARRAY);
-	
+	int polyCount = cube->GetPolyCount();
 	glVertexPointer(3, GL_FLOAT, 0, cube->GetVertices());
 
 	//glColorPointer(3, GL_FLOAT, 0, cube->GetColours());
@@ -239,9 +240,23 @@ void ProjectGL::DrawObjFile()
 	glPushMatrix();
 	glScalef(0.1f, 0.1f, 0.1f);
 	glDrawElements(GL_TRIANGLES, cube->GetPolyCount()*3, GL_UNSIGNED_SHORT, cube->GetIndices());
-	int polyCount = cube->GetPolyCount();
+	
 	glPopMatrix();
 
 	//glDisableClientState(GL_COLOR_ARRAY);
+	glDisableClientState(GL_VERTEX_ARRAY);
+}
+
+// Draw OpenGL .obj file from the values obtained in the vetices and indices
+// These can be obtained using the cube::getVertices() and cube::getIndices() functions which return the vertices and indices respectively
+void ProjectGL::DrawIndexedCubeFile1()
+{
+	int indexedIndicesCount = cube->GetPolyCount()*3;
+	glEnableClientState(GL_VERTEX_ARRAY);
+	glVertexPointer(3, GL_FLOAT, 0, cube->GetVertices());
+	glPushMatrix();
+	glScalef(0.1f, 0.1f, 0.1f);
+	glDrawElements(GL_TRIANGLES, indexedIndicesCount, GL_UNSIGNED_SHORT, cube->GetIndices());
+	glPopMatrix();
 	glDisableClientState(GL_VERTEX_ARRAY);
 }

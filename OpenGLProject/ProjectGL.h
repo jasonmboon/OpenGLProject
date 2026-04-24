@@ -71,4 +71,5 @@ public:
 	void DrawIndexedCubeAlt();
 	void DrawIndexedCubeFile();
 	void DrawObjFile();
+	void DrawIndexedCubeFile1();
 };
