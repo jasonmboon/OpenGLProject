@@ -47,8 +47,8 @@ struct Camera
 
 struct Mesh
 {
-	Vertex* vertices;
-	Colour* colours;
-	GLushort* indices;
+	Vertex* Vertices;
+	Colour* Colours;
+	GLushort* Indices;
 	int VertexCount, ColourCount, IndexCount;
 };

@@ -72,4 +72,6 @@ public:
 	void DrawIndexedCubeFile();
 	void DrawObjFile();
 	void DrawIndexedCubeFile1();
+	void InitObjects();
+	void InitGL(int argc, char* argv[]);
 };

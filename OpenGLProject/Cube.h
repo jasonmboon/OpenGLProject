@@ -4,6 +4,7 @@
 class Cube : public SceneObject
 {
 private:
+	Mesh* _mesh;
 	float _rotation;
 	static Vertex* indexedVertices;
 	static Colour* indexedColours;

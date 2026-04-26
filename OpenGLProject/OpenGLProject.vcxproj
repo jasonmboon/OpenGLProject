@@ -129,6 +129,7 @@
   <ItemGroup>
     <ClInclude Include="Cube.h" />
     <ClInclude Include="GLUTcallbacks.h" />
+    <ClInclude Include="MeshLoader.h" />
     <ClInclude Include="ProgectGL-Header.Old.h" />
     <ClInclude Include="ProjectGL.h" />
     <ClInclude Include="SceneObject.h" />
@@ -138,6 +139,7 @@
     <ClCompile Include="Cube.cpp" />
     <ClCompile Include="GLUTcallbacks.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MeshLoader.cpp" />
     <ClCompile Include="progectGL-Old-Copy.cpp" />
     <ClCompile Include="ProjectGL.cpp" />
     <ClCompile Include="SceneObject.cpp" />
