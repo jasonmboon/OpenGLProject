@@ -11,6 +11,6 @@ class SceneObject
 		virtual ~SceneObject(void);
 
 		virtual void Update() = 0;
-		virtual void Draw() = 0;
+		virtual void Draw(Vector3 position, Vector3 scale) = 0;
 };
 

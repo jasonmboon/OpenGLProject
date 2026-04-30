@@ -9,18 +9,77 @@ Vertex* Cube::indexedVertices = nullptr;
 Colour* Cube::indexedColours = nullptr;
 GLushort* Cube::indices = nullptr;
 
-Cube::Cube(Mesh* mesh, float x, float y, float z) : SceneObject(mesh)
+Cube::Cube(Mesh* mesh, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh)
 {
+	rotation = 0.1f;
 
+	// Change from true -> OBJ file, false -> text file depending on what you want to display
+	SetIsObjectFile(true);
+
+	if (GetIsObjectFile())
+	{
+		SetFilePath((char*)"./Other Files/teapota.obj");
+		Cube::LoadObjectFile(GetFilePath());
+	}
+	else
+	{
+		SetFilePath((char*)"pyramid.txt");
+		Cube::Load(GetFilePath());
+	}
+
+	setPolygonCount(GetPolyCount());
+	_position = Vector3(_posX, _posY, _posZ);
+	_scale = Vector3(_scaleX, _scaleY, _scaleZ);
 }
 
 Cube::~Cube(void)
 {
 }
 
-void Cube::Draw()
+void Cube::Draw(Vector3 position, Vector3 scale)
 {
+	if (GetIsObjectFile())
+	{
+		glEnableClientState(GL_VERTEX_ARRAY);
+		//glEnableClientState(GL_COLOR_ARRAY);
+		int polyCount = GetPolyCount();
+		glVertexPointer(3, GL_FLOAT, 0, GetVertices());
 
+		//glColorPointer(3, GL_FLOAT, 0, cube->GetColours());
+
+		glPushMatrix();
+		glTranslatef(position.x, position.y, position.z);
+		glScalef(scale.x, scale.y, scale.z);
+		glRotatef(rotation, 0.0f, 1.0f, 1.0f);
+		glDrawElements(GL_TRIANGLES, GetPolyCount() * 3, GL_UNSIGNED_SHORT, GetIndices());
+
+		glPopMatrix();
+
+		//glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
+	else
+	{
+		int indexedIndicesCount = GetPolyCount();
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glEnableClientState(GL_COLOR_ARRAY);
+
+
+		glVertexPointer(3, GL_FLOAT, 0, GetVertices());
+		glColorPointer(3, GL_FLOAT, 0, GetColours());
+
+		glPushMatrix();
+		glTranslatef(position.x, position.y, position.z);
+		glScalef(scale.x, scale.y, scale.z);
+		glRotatef(rotation, 0.0f, 1.0f, 1.0f);
+
+		glDrawElements(GL_TRIANGLES, indexedIndicesCount, GL_UNSIGNED_SHORT, GetIndices());
+		glPopMatrix();
+
+
+		glDisableClientState(GL_COLOR_ARRAY);
+		glDisableClientState(GL_VERTEX_ARRAY);
+	}
 }
 
 void Cube::Update()
@@ -116,14 +175,14 @@ bool Cube::LoadObjectFile(char* path)
 			std::string prefix;
 			iss >> prefix;
 
-			if (currentVertexPos >= numVertices)
+			if (currentVertexPos > numVertices)
 			{
 				std::cerr << "Error: Current vertex exceeds allocated memory." << std::endl;
 				break; // Prevent reading beyond allocated memory
 			}
 			
-			if (currentVertexPos <= numVertices-3 && prefix == "v") {
-				iss >> indexedVertices[currentVertexPos - 1].x >> indexedVertices[currentVertexPos - 1].y >> indexedVertices[currentVertexPos - 1].z;
+			if (currentVertexPos < numVertices && prefix == "v") {
+				iss >> indexedVertices[currentVertexPos].x >> indexedVertices[currentVertexPos].y >> indexedVertices[currentVertexPos].z;
 				currentVertexPos++;
 			}
 		}

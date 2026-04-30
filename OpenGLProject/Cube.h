@@ -10,9 +10,15 @@ private:
 	static Colour* indexedColours;
 	static GLushort* indices;
 	static int numVertices, numColours, numIndices;
+	Vector3 _position;
+	Vector3 _scale;
+	bool isObjectFile = false;
+	char* filePath;
+	int polygonCount;
+	float rotation;
 
 public:
-	Cube(Mesh* mesh, float x, float y, float z);
+	Cube(Mesh* mesh, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ);
 	~Cube(void);
 
 	// Getters for static members
@@ -22,8 +28,39 @@ public:
 	int GetPolyCount() { return numIndices; }
 	int GetVertexCount() { return numVertices; }
 
+
+	// Getters and settings for file path, isObjectFile and polygon count
+	void SetFilePath(char* _filePath) {
+		filePath = _filePath;
+	}
+	char* GetFilePath() {
+		return filePath;
+	}
+	void SetIsObjectFile(bool _isObjectFile) {
+		isObjectFile = _isObjectFile;
+	}
+
+	bool GetIsObjectFile() {
+		return isObjectFile;
+	}
+	void setPolygonCount(int _polygonCount) {
+		polygonCount = _polygonCount;
+	}
+
+	int GetPolygonCount() {
+		return polygonCount;
+	}
+
+	float GetRotation() {
+		return rotation;
+	}
+	void SetRotation(float _rotation) {
+		rotation = _rotation;
+	}
+
+	// Override virtual functions from SceneObject
 	void Update();
-	void Draw();
+	void Draw(Vector3 position, Vector3 scale);
 	static bool Load(char* path);
 	static bool LoadObjectFile(char* path);
 };
