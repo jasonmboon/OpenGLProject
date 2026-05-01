@@ -52,3 +52,16 @@ struct Mesh
 	GLushort* Indices;
 	int VertexCount, ColourCount, IndexCount;
 };
+
+struct lighting {
+	float ambient[4];
+	float diffuse[4];
+	float specular[4];
+};
+
+struct material {
+	float ambient[4];
+	float diffuse[4];
+	float specular[4];
+	float shininess;
+};

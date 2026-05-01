@@ -15,6 +15,21 @@
 
 std::ofstream outFile;
 
+lighting whiteLighting = {
+	{0.2f, 0.2f, 0.2f, 1.0f}, // Ambient light
+	{0.7f, 0.7f, 0.7f, 1.0f}, // Diffuse light
+	{0.5f, 0.5f, 0.5f, 1.0f}  // Specular light
+};
+
+material redShinyMaterial = {
+	{0.8f, 0.05f, 0.05f, 1.0f}, // Ambient reflectance
+	{0.8f, 0.05f, 0.05f, 1.0f}, // Diffuse reflectance
+	{1.0f, 1.0f, 1.0f, 1.0f}, // Specular reflectance
+	100.0f                      // Shininess
+};
+
+float light0_pos[] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 ProjectGL::ProjectGL(int argc, char* argv[])
 {
 	glEnable(GL_CULL_FACE); // Enable back-face culling
@@ -29,26 +44,30 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	glutKeyboardFunc(GLUTCallbacks::Keyboard);
 	glutDisplayFunc(GLUTCallbacks::Display);
 	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
-
+	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
 	// Depth testing
 	
 	glEnable(GL_DEPTH_TEST);
 
-
 	// Camera
 	camera = new Camera();
-	camera->eye = { 0.0f, 0.0f, 1.0f };
+	camera->eye = { 0.0f, 0.0f, 3.0f };
 	camera->centre = { 0.0f, 0.0f, 0.0f };
 	camera->up = { 0.0f, 1.0f, 0.0f };	
 	
-	cube = new Cube(nullptr, 0.0f, 0.0f, 0.0f, 1.5f, 1.5f, 1.5f);
-	
+	cube = new Cube(nullptr, 0.0f, 0.0f, 0.0f, 1.1f, 1.1f, 1.1f);
+	cube2 = new Cube(nullptr, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, 800, 800);
 	gluPerspective(45.0, 1.0, 0.1, 1000.0);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
 	glMatrixMode(GL_MODELVIEW);
 	// end camera
+
+	setLight(&whiteLighting);
 	
 	glEnable(GL_CULL_FACE); // Enable back-face culling
 	glCullFace(GL_BACK); // Specify that back faces should be culled
@@ -63,29 +82,17 @@ ProjectGL::~ProjectGL(void)
 
 void ProjectGL::Display()
 {
-	int m_CenterX = 0;
-	int m_CenterY = 0;
-	const int m_Coords = 2;
-	const int m_Sides = 4;
-	float m_Vertices[m_Sides][m_Coords] = {
-		-0.5f, 0.0f, // Bottom Left
-		-0.5f, 0.5f, // Top left
-		 0.5f, 0.5f, // Top Right
-		 0.5f, 0.0f, // Bottom Right
-	};
-
 	// Clear screen buffer
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	
 	// Draw grid with grid size of 0.1 and 10 lines in each direction
-	DrawGrid(0.1f, 10);
-
+	//DrawGrid(0.1f, 10);
+	setMaterial(&redShinyMaterial);
+	
 	glPushMatrix();
 
-	//glRotatef(rotation, 0.0f, 1.0f, 1.0f);
-
-	// Draw the cube at the origin with a scale of 1.5 in all directions
-	cube->Draw(Vector3(0.0f, 0.0f, 0.0f), Vector3(0.1f, 0.1f, 0.1f));
+	// Draw the image at the origin first, with a given scale second
+	cube->Draw(Vector3(0.0f, -0.2f, 0.0f), Vector3(0.05f, 0.05f, 0.05f));
 
 	glPopMatrix();
 
@@ -112,14 +119,14 @@ void ProjectGL::Update()
 
 void ProjectGL::Keyboard(unsigned char key, int x, int y)
 {
-	float curreRoration = cube->GetRotation();
+	float currentRotation = cube->GetRotation();
 	if (key == 'd')
-			{
-		cube->SetRotation(curreRoration -= 5.0f);
+	{
+		cube->SetRotation(currentRotation -= 5.0f);
 	}
 	else if (key == 'a')
 	{
-		cube->SetRotation(curreRoration += 5.0f);
+		cube->SetRotation(currentRotation += 5.0f);
 	}
 	else if (key == 'w')
 	{
@@ -133,7 +140,6 @@ void ProjectGL::Keyboard(unsigned char key, int x, int y)
 
 void ProjectGL::DrawGrid(float gridSize, int numLines)
 {
-
 	glColor4f(GRAY);
 	glTranslatef(0.0f, 0.0f, -3.0f); // Move the grid back so it's visible in the perspective view
 	glBegin(GL_LINES);
@@ -147,4 +153,18 @@ void ProjectGL::DrawGrid(float gridSize, int numLines)
 	glEnd();
 }
 
+void ProjectGL::setLight(lighting* light)
+{
+	glLightfv(GL_LIGHT0, GL_AMBIENT, light->ambient);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, light->diffuse);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, light->specular);
+	glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
+}
 
+void ProjectGL::setMaterial(material* mat)
+{
+	glMaterialfv(GL_FRONT, GL_AMBIENT, mat->ambient);
+	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat->diffuse);
+	glMaterialfv(GL_FRONT, GL_SPECULAR, mat->specular);
+	glMaterialf(GL_FRONT, GL_SHININESS, mat->shininess);
+}

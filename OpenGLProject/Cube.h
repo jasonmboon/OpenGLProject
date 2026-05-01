@@ -28,7 +28,6 @@ public:
 	int GetPolyCount() { return numIndices; }
 	int GetVertexCount() { return numVertices; }
 
-
 	// Getters and settings for file path, isObjectFile and polygon count
 	void SetFilePath(char* _filePath) {
 		filePath = _filePath;

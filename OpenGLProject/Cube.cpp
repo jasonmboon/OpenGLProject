@@ -18,7 +18,7 @@ Cube::Cube(Mesh* mesh, float _posX, float _posY, float _posZ, float _scaleX, flo
 
 	if (GetIsObjectFile())
 	{
-		SetFilePath((char*)"./Other Files/teapota.obj");
+		SetFilePath((char*)"./Other Files/teapot.obj");
 		Cube::LoadObjectFile(GetFilePath());
 	}
 	else

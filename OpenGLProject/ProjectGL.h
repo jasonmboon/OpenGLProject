@@ -14,13 +14,9 @@ class ProjectGL
 {
 private:
 	//Private member variables and functions
-
-
 	Camera* camera;
-
-	
-
 	Cube* cube;
+	Cube* cube2;
 	
 public:
 	//Constructor and Destructor
@@ -33,8 +29,8 @@ public:
 	void Keyboard(unsigned char key, int x, int y);
 	void DrawGrid(float gridSize, int numLines);
 	void DrawCube();
-	//void DrawIndexedCube();
-	//void DrawIndexedCubeAlt();
+	void setLight(lighting* light);
+	void setMaterial(material* mat);
 	void InitObjects();
 	void InitGL(int argc, char* argv[]);
 };
