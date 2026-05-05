@@ -48,7 +48,7 @@ struct Camera
 struct Mesh
 {
 	Vertex* Vertices;
-	Colour* Colours;
+	Vector3* Normals;
 	GLushort* Indices;
 	int VertexCount, ColourCount, IndexCount;
 };
@@ -64,4 +64,17 @@ struct material {
 	float diffuse[4];
 	float specular[4];
 	float shininess;
+};
+
+struct TexCoord
+{
+	GLfloat u, v;
+};
+
+struct TexturedMesh : public Mesh
+{
+	Mesh* Mesh;
+
+	TexCoord* TexCoords;
+	int TexCoordCount;
 };

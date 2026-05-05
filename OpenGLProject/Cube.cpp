@@ -7,6 +7,7 @@ int Cube::numIndices = 0;
 
 Vertex* Cube::indexedVertices = nullptr;
 Colour* Cube::indexedColours = nullptr;
+Vector3* Cube::indexedNormals = nullptr;
 GLushort* Cube::indices = nullptr;
 
 Cube::Cube(Mesh* mesh, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh)
@@ -88,6 +89,40 @@ void Cube::Update()
 }
 
 bool Cube::Load(char* path)
+{
+	std::ifstream inFile;
+	inFile.open(path);
+	if (!inFile.good())
+	{
+		std::cerr << "Error opening file: " << path << std::endl;
+		return false;
+	}
+
+	inFile >> numVertices;
+	indexedVertices = new Vertex[numVertices];
+	for (int i = 0; i < numVertices; i++)
+	{
+		inFile >> indexedVertices[i].x >> indexedVertices[i].y >> indexedVertices[i].z;
+	}
+
+	inFile >> numColours;
+	indexedColours = new Colour[numColours];
+	for (int i = 0; i < numColours; i++)
+	{
+		inFile >> indexedColours[i].r >> indexedColours[i].g >> indexedColours[i].b;
+	}
+
+	inFile >> numIndices;
+	indices = new GLushort[numIndices];
+	for (int i = 0; i < numIndices; i++)
+	{
+		inFile >> indices[i];
+	}
+
+	return true;
+}
+
+bool Cube::LoadEnhanced(char* path)
 {
 	std::ifstream inFile;
 	inFile.open(path);

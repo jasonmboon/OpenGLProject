@@ -8,6 +8,7 @@ private:
 	float _rotation;
 	static Vertex* indexedVertices;
 	static Colour* indexedColours;
+	static Vector3* indexedNormals;
 	static GLushort* indices;
 	static int numVertices, numColours, numIndices;
 	Vector3 _position;
@@ -61,6 +62,7 @@ public:
 	void Update();
 	void Draw(Vector3 position, Vector3 scale);
 	static bool Load(char* path);
+	static bool LoadEnhanced(char* path);
 	static bool LoadObjectFile(char* path);
 };
 
