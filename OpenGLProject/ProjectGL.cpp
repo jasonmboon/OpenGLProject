@@ -32,6 +32,8 @@ float light0_pos[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 ProjectGL::ProjectGL(int argc, char* argv[])
 {
+	glEnable(GL_TEXTURE_2D); // Enable 2D texturing
+	glEnable(GL_DEPTH_TEST); // Enable depth testing for correct z-ordering
 	glEnable(GL_CULL_FACE); // Enable back-face culling
 	glCullFace(GL_BACK); // Specify that back faces should be culled
 	//PolygonCount = 0;
@@ -45,18 +47,15 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	glutDisplayFunc(GLUTCallbacks::Display);
 	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
 	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
-	// Depth testing
 	
-	glEnable(GL_DEPTH_TEST);
-
 	// Camera
 	camera = new Camera();
 	camera->eye = { 0.0f, 0.0f, 3.0f };
 	camera->centre = { 0.0f, 0.0f, 0.0f };
 	camera->up = { 0.0f, 1.0f, 0.0f };	
 	
-	cube = new Cube(nullptr, 0.0f, 0.0f, 0.0f, 1.1f, 1.1f, 1.1f);
-	cube2 = new Cube(nullptr, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
+	cube = new Cube(nullptr, nullptr, 0.0f, 0.0f, 0.0f, 1.1f, 1.1f, 1.1f);
+	cube2 = new Cube(nullptr, nullptr, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();

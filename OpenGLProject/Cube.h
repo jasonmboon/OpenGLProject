@@ -19,7 +19,7 @@ private:
 	float rotation;
 
 public:
-	Cube(Mesh* mesh, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ);
+	Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ);
 	~Cube(void);
 
 	// Getters for static members

@@ -50,7 +50,8 @@ struct Mesh
 	Vertex* Vertices;
 	Vector3* Normals;
 	GLushort* Indices;
-	int VertexCount, ColourCount, IndexCount;
+	TexCoord* TexCoords;
+	int VertexCount, ColourCount, IndexCount, TexCoordCount;
 };
 
 struct lighting {
@@ -71,10 +72,3 @@ struct TexCoord
 	GLfloat u, v;
 };
 
-struct TexturedMesh : public Mesh
-{
-	Mesh* Mesh;
-
-	TexCoord* TexCoords;
-	int TexCoordCount;
-};

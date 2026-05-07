@@ -1,5 +1,10 @@
 #include "Texture2D.h"
 
+Texture2D::~Texture2D(void)
+{
+	glDeleteTextures(1, &textureID);
+}
+
 bool Texture2D::Load(char* path, int width, int height)
 {
 	char* tempTextureData;

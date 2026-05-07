@@ -8,8 +8,8 @@ using namespace std;
 namespace MeshLoader
 {
 	void LoadVertices(ifstream& inFile, Mesh& mesh);
-	void LoadColours(ifstream& inFile, Mesh& mesh);
-	void LoadTexCoords(ifstream& inFile, TexturedMesh& mesh);
+	void LoadNormals(ifstream& inFile, Mesh& mesh);
+	void LoadTexCoords(ifstream& inFile, Mesh& mesh);
 	void LoadIndices(ifstream& inFile, Mesh& mesh);
 
 	void LoadVertices(ifstream& inFile, Mesh& mesh)
@@ -29,12 +29,12 @@ namespace MeshLoader
 		}
 	}
 
-	void LoadColours(ifstream& inFile, Mesh& mesh)
+	void LoadNormals(ifstream& inFile, Mesh& mesh)
 	{
-		//TODO: LOAD COLOURS
+		//TODO: LOAD Normals
 	}
 
-	void LoadTexCoords(ifstream& inFile, TexturedMesh& mesh)
+	void LoadTexCoords(ifstream& inFile, Mesh& mesh)
 	{
 		//TODO: Load TexCoords
 	}
@@ -59,16 +59,11 @@ namespace MeshLoader
 		}
 
 		//LOAD DATA USING METHODS ABOVE
-
-		return mesh;
-	}
-
-	TexturedMesh* MeshLoader::LoadTextured(char* path)
-	{
-		TexturedMesh* mesh = new TexturedMesh();
-		mesh->Mesh = new Mesh();
-
-		//LOAD FILE AND DATA
+		//LoadVertices(inFile, *mesh);
+		//LoadNormals(inFile, *mesh);
+		//LoadTexCoords(inFile, *mesh);
+		//LoadIndices(inFile, *mesh);
+		//inFile.close();
 
 		return mesh;
 	}

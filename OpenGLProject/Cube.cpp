@@ -1,6 +1,8 @@
 #pragma once
 #include "Cube.h"
 
+
+Mesh* m_Mesh = nullptr;
 int Cube::numVertices = 0;
 int Cube::numColours = 0;
 int Cube::numIndices = 0;
@@ -10,21 +12,23 @@ Colour* Cube::indexedColours = nullptr;
 Vector3* Cube::indexedNormals = nullptr;
 GLushort* Cube::indices = nullptr;
 
-Cube::Cube(Mesh* mesh, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh)
+Cube::Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh, nullptr)
 {
 	rotation = 0.1f;
 
 	// Change from true -> OBJ file, false -> text file depending on what you want to display
-	SetIsObjectFile(true);
+	SetIsObjectFile(false);
 
 	if (GetIsObjectFile())
 	{
+		// Need to update the obj reader to read in normals and texture coordinates as well, plus materials
 		SetFilePath((char*)"./Other Files/teapot.obj");
 		Cube::LoadObjectFile(GetFilePath());
 	}
 	else
 	{
-		SetFilePath((char*)"pyramid.txt");
+		// Testing new cube with texture
+		SetFilePath((char*)"cube.txt");
 		Cube::Load(GetFilePath());
 	}
 
@@ -61,13 +65,22 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 	}
 	else
 	{
+
 		int indexedIndicesCount = GetPolyCount();
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
+		glBindTexture(GL_TEXTURE_2D, _texture->GetTextureID());
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
+		// Textures
+		glEnable(GL_TEXTURE_2D);
+		Texture2D* texture = new Texture2D();
+		texture->Load((char*)"./Other Files/stars.raw", 512, 512);
+		glBindTexture(GL_TEXTURE_2D, texture->GetTextureID());
 
 		glVertexPointer(3, GL_FLOAT, 0, GetVertices());
 		glColorPointer(3, GL_FLOAT, 0, GetColours());
+		glTexCoordPointer(2, GL_FLOAT, 0, _mesh->TexCoords);
 
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
@@ -77,7 +90,7 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		glDrawElements(GL_TRIANGLES, indexedIndicesCount, GL_UNSIGNED_SHORT, GetIndices());
 		glPopMatrix();
 
-
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 		glDisableClientState(GL_COLOR_ARRAY);
 		glDisableClientState(GL_VERTEX_ARRAY);
 	}
@@ -90,6 +103,8 @@ void Cube::Update()
 
 bool Cube::Load(char* path)
 {
+
+	/// TODO: Delete the contents here and call the Mesh loader functions instead, this is just for testing purposes
 	std::ifstream inFile;
 	inFile.open(path);
 	if (!inFile.good())
@@ -106,7 +121,7 @@ bool Cube::Load(char* path)
 	}
 
 	inFile >> numColours;
-	indexedColours = new Colour[numColours];
+	indexedColours = new Colour[numColours]; // Needs to be Textures
 	for (int i = 0; i < numColours; i++)
 	{
 		inFile >> indexedColours[i].r >> indexedColours[i].g >> indexedColours[i].b;
@@ -264,4 +279,65 @@ bool Cube::LoadObjectFile(char* path)
 		std::cout << "Imported Indices correctly" << std::endl;
 	}
 	return true;
+}
+
+int LoadTextureTGA(const char* textureFileName)
+{
+	GLuint ID = 0;
+	char* tempHeaderData = new char[18]; //18 Bytes is TGA Header Size
+	char* tempTextureData;
+	int fileSize;
+	char type, pixelDepth, mode;
+
+	std::ifstream inFile;
+
+	inFile.open(textureFileName, std::ios::binary);
+	if (!inFile.good())
+	{
+		std::cerr << "Can't open texture file " << textureFileName << std::endl;
+		return -1;
+	}
+
+	//18 Bytes is the size of a TGA Header
+	inFile.seekg(0, std::ios::beg); //Seek back to beginning of file
+	inFile.read(tempHeaderData, 18); //Read in all the data in one go
+
+	inFile.seekg(0, std::ios::end); //Seek to end of file
+	fileSize = (int)inFile.tellg() - 18; //Get current position in file - The End, this gives us total file size
+	tempTextureData = new char[fileSize]; //Create an new aray to store data
+	inFile.seekg(18, std::ios::beg); //Seek back to beginning of file + 18
+	inFile.read(tempTextureData, fileSize); //Read in all the data in one go
+	inFile.close(); //Close the file
+
+	type = tempHeaderData[2]; //Get TGA Type out of Header - Must be RGB for this to work
+	int _width = ((unsigned char)tempHeaderData[13] << 8u) + (unsigned char)tempHeaderData[12]; // Find the width (Combines two bytes into a short)
+	int _height = ((unsigned char)tempHeaderData[15] << 8u) + (unsigned char)tempHeaderData[14]; //Find the height
+	pixelDepth = tempHeaderData[16]; // Find the pixel depth (24/32bpp)
+
+	bool flipped = false;
+	if ((int)((tempHeaderData[11] << 8) + tempHeaderData[10]) == 0)
+		flipped = true;
+
+	//We only support RGB type
+	if (type == 2)
+	{
+		std::cout << textureFileName << " loaded." << std::endl;
+
+		glGenTextures(1, &ID); //Get next Texture ID
+		glBindTexture(GL_TEXTURE_2D, ID); //Bind the texture to the ID
+
+		mode = pixelDepth / 8;
+
+		//Note that TGA files are stored as BGR(A) - So we need to specify the format as GL_BGR(A)_EXT
+		if (mode == 4)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_BGRA_EXT, GL_UNSIGNED_BYTE, tempTextureData);
+		else
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, _width, _height, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, tempTextureData);
+
+	}
+
+	delete[] tempHeaderData; //We don't need the header memory anymore
+	delete[] tempTextureData; //Clear up the data - We don't need this any more
+
+	return ID;
 }
