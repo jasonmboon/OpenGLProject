@@ -309,7 +309,7 @@ bool Cube::LoadObjectFile(char* path)
 	return true;
 }
 
-int LoadTextureTGA(const char* textureFileName)
+GLint Cube::LoadTextureTGA(char* textureFileName)
 {
 	GLuint ID = 0;
 	char* tempHeaderData = new char[18]; //18 Bytes is TGA Header Size

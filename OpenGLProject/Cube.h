@@ -65,5 +65,6 @@ public:
 	static bool Load(char* path);
 	static bool LoadEnhanced(char* path);
 	static bool LoadObjectFile(char* path);
+	static GLint LoadTextureTGA(char* path);
 };
 
