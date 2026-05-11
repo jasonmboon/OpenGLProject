@@ -1,6 +1,7 @@
 #pragma once
 #include "Cube.h"
-
+#include "MeshLoader.h"
+#include "Texture2D.h"
 
 Mesh* m_Mesh = nullptr;
 int Cube::numVertices = 0;
@@ -10,6 +11,7 @@ int Cube::numIndices = 0;
 Vertex* Cube::indexedVertices = nullptr;
 Colour* Cube::indexedColours = nullptr;
 Vector3* Cube::indexedNormals = nullptr;
+TexCoord* Cube::indexedTextures = nullptr;
 GLushort* Cube::indices = nullptr;
 
 Cube::Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh, nullptr)
@@ -65,7 +67,7 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 	}
 	else
 	{
-
+		bool texturesLoaded = true;
 		int indexedIndicesCount = GetPolyCount();
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
@@ -75,12 +77,20 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		// Textures
 		glEnable(GL_TEXTURE_2D);
 		Texture2D* texture = new Texture2D();
-		texture->Load((char*)"./Other Files/stars.raw", 512, 512);
+		texturesLoaded = texture->Load((char*)"./Other Files/stars.raw", 512, 512);
+
+		if (!texturesLoaded)
+		{
+			std::cerr << "Failed to load texture." << std::endl;
+			return;
+		}
+
 		glBindTexture(GL_TEXTURE_2D, texture->GetTextureID());
 
 		glVertexPointer(3, GL_FLOAT, 0, GetVertices());
 		glColorPointer(3, GL_FLOAT, 0, GetColours());
-		glTexCoordPointer(2, GL_FLOAT, 0, _mesh->TexCoords);
+		//glTexCoordPointer(2, GL_FLOAT, 0, _mesh->TexCoords);
+		glTexCoordPointer(2, GL_FLOAT, 0, indexedTextures);
 
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
@@ -105,34 +115,52 @@ bool Cube::Load(char* path)
 {
 
 	/// TODO: Delete the contents here and call the Mesh loader functions instead, this is just for testing purposes
-	std::ifstream inFile;
-	inFile.open(path);
-	if (!inFile.good())
+
+	Mesh* mesh = MeshLoader::Load(path);
+
+	if (mesh)
 	{
-		std::cerr << "Error opening file: " << path << std::endl;
+		// Use the loaded mesh data
+		// For example:
+		indexedVertices = mesh->Vertices;
+		indexedNormals = mesh->Normals;
+		indexedTextures =mesh->TexCoords;
+		indices = mesh->Indices;
+	}
+	else
+	{
+		std::cerr << "Failed to load mesh from: " << path << std::endl;
 		return false;
 	}
 
-	inFile >> numVertices;
-	indexedVertices = new Vertex[numVertices];
-	for (int i = 0; i < numVertices; i++)
-	{
-		inFile >> indexedVertices[i].x >> indexedVertices[i].y >> indexedVertices[i].z;
-	}
+	//std::ifstream inFile;
+	//inFile.open(path);
+	//if (!inFile.good())
+	//{
+	//	std::cerr << "Error opening file: " << path << std::endl;
+	//	return false;
+	//}
 
-	inFile >> numColours;
-	indexedColours = new Colour[numColours]; // Needs to be Textures
-	for (int i = 0; i < numColours; i++)
-	{
-		inFile >> indexedColours[i].r >> indexedColours[i].g >> indexedColours[i].b;
-	}
+	//inFile >> numVertices;
+	//indexedVertices = new Vertex[numVertices];
+	//for (int i = 0; i < numVertices; i++)
+	//{
+	//	inFile >> indexedVertices[i].x >> indexedVertices[i].y >> indexedVertices[i].z;
+	//}
 
-	inFile >> numIndices;
-	indices = new GLushort[numIndices];
-	for (int i = 0; i < numIndices; i++)
-	{
-		inFile >> indices[i];
-	}
+	//inFile >> numColours;
+	//indexedColours = new Colour[numColours]; // Needs to be Textures
+	//for (int i = 0; i < numColours; i++)
+	//{
+	//	inFile >> indexedColours[i].r >> indexedColours[i].g >> indexedColours[i].b;
+	//}
+
+	//inFile >> numIndices;
+	//indices = new GLushort[numIndices];
+	//for (int i = 0; i < numIndices; i++)
+	//{
+	//	inFile >> indices[i];
+	//}
 
 	return true;
 }

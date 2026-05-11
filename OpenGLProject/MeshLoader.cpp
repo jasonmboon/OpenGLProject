@@ -31,17 +31,47 @@ namespace MeshLoader
 
 	void LoadNormals(ifstream& inFile, Mesh& mesh)
 	{
-		//TODO: LOAD Normals
+		inFile >> mesh.NormalCount;
+
+		if (mesh.NormalCount > 0)
+		{
+			mesh.Normals = new Vector3[mesh.NormalCount];
+			for (int i = 0; i < mesh.NormalCount; i++)
+			{
+				inFile >> mesh.Normals[i].x;
+				inFile >> mesh.Normals[i].y;
+				inFile >> mesh.Normals[i].z;
+			}
+		}
 	}
 
 	void LoadTexCoords(ifstream& inFile, Mesh& mesh)
 	{
-		//TODO: Load TexCoords
+		inFile >> mesh.TexCoordCount;
+
+		if (mesh.TexCoordCount > 0)
+		{
+			mesh.TexCoords = new TexCoord[mesh.TexCoordCount];
+			for (int i = 0; i < mesh.TexCoordCount; i++)
+			{
+				inFile >> mesh.TexCoords[i].u;
+				inFile >> mesh.TexCoords[i].v;
+			}
+		}
 	}
 
 	void LoadIndices(ifstream& inFile, Mesh& mesh)
 	{
-		//TODO: Load Indices
+		inFile >> mesh.IndexCount;
+
+		if (mesh.IndexCount > 0)
+		{
+			mesh.Indices = new GLushort[mesh.IndexCount];
+			for (int i = 0; i < mesh.IndexCount; i++)
+			{
+				inFile >> mesh.Indices[i];
+			}
+		}
 	}
 
 	Mesh* MeshLoader::Load(char* path)
@@ -59,11 +89,11 @@ namespace MeshLoader
 		}
 
 		//LOAD DATA USING METHODS ABOVE
-		//LoadVertices(inFile, *mesh);
-		//LoadNormals(inFile, *mesh);
-		//LoadTexCoords(inFile, *mesh);
-		//LoadIndices(inFile, *mesh);
-		//inFile.close();
+		LoadVertices(inFile, *mesh);
+		LoadNormals(inFile, *mesh);
+		LoadTexCoords(inFile, *mesh);
+		LoadIndices(inFile, *mesh);
+		inFile.close();
 
 		return mesh;
 	}

@@ -6,6 +6,7 @@ class Texture2D
 private:
 	GLuint textureID;
 	int width, height;
+	TextureNode* textureList;
 
 public:
 	Texture2D();

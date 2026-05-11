@@ -8,9 +8,10 @@ private:
 	float _rotation;
 	static Vertex* indexedVertices;
 	static Colour* indexedColours;
+	static TexCoord* indexedTextures;
 	static Vector3* indexedNormals;
 	static GLushort* indices;
-	static int numVertices, numColours, numIndices;
+	static int numVertices, numNormals, numColours, numIndices;
 	Vector3 _position;
 	Vector3 _scale;
 	bool isObjectFile = false;

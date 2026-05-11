@@ -45,13 +45,18 @@ struct Camera
 	Vector3 up;
 };
 
+struct TexCoord
+{
+	GLfloat u, v;
+};
+
 struct Mesh
 {
 	Vertex* Vertices;
 	Vector3* Normals;
 	GLushort* Indices;
 	TexCoord* TexCoords;
-	int VertexCount, ColourCount, IndexCount, TexCoordCount;
+	int VertexCount, NormalCount, IndexCount, TexCoordCount;
 };
 
 struct lighting {
@@ -67,8 +72,14 @@ struct material {
 	float shininess;
 };
 
-struct TexCoord
+// linked list to store texture ID and path to texture file
+struct TextureNode
 {
-	GLfloat u, v;
+	GLuint textureID;
+	char* filePath;
+	TextureNode* next;
+	TextureNode(GLuint id, char* path) : textureID(id), filePath(path), next(nullptr) {}
 };
+
+
 
