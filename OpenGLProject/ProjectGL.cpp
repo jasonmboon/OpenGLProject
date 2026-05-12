@@ -48,14 +48,27 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
 	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
 	
+
+	//Texure loading test
+	glEnable(GL_TEXTURE_2D);
+	bool texturesLoaded = true;
+	Texture2D* texture = new Texture2D();
+	texturesLoaded = texture->Load((char*)"./Other Files/stars.raw", 512, 512);
+	if (!texturesLoaded)
+	{
+		std::cerr << "Failed to load texture." << std::endl;
+		return;
+	}
+
 	// Camera
 	camera = new Camera();
 	camera->eye = { 0.0f, 0.0f, 3.0f };
 	camera->centre = { 0.0f, 0.0f, 0.0f };
 	camera->up = { 0.0f, 1.0f, 0.0f };	
 	
-	cube = new Cube(nullptr, nullptr, 0.0f, 0.0f, 0.0f, 1.1f, 1.1f, 1.1f);
-	cube2 = new Cube(nullptr, nullptr, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
+	Mesh* cubeMesh = MeshLoader::Load((char*)"cube.txt");
+
+	cube = new Cube(cubeMesh, texture, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -85,7 +98,7 @@ void ProjectGL::Display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	// Draw grid with grid size of 0.1 and 10 lines in each direction
-	//DrawGrid(0.1f, 10);
+	DrawGrid(0.1f, 10);
 	setMaterial(&redShinyMaterial);
 	
 	glPushMatrix();
@@ -166,4 +179,19 @@ void ProjectGL::setMaterial(material* mat)
 	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat->diffuse);
 	glMaterialfv(GL_FRONT, GL_SPECULAR, mat->specular);
 	glMaterialf(GL_FRONT, GL_SHININESS, mat->shininess);
+}
+
+void ProjectGL::DrawCube()
+{
+
+}
+
+void ProjectGL::InitObjects()
+{
+
+}
+
+void ProjectGL::InitGL(int argc, char* argv[])
+{
+
 }

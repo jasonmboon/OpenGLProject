@@ -7,6 +7,7 @@ Mesh* m_Mesh = nullptr;
 int Cube::numVertices = 0;
 int Cube::numColours = 0;
 int Cube::numIndices = 0;
+int numberOfIndices = 0;
 
 Vertex* Cube::indexedVertices = nullptr;
 Colour* Cube::indexedColours = nullptr;
@@ -14,9 +15,10 @@ Vector3* Cube::indexedNormals = nullptr;
 TexCoord* Cube::indexedTextures = nullptr;
 GLushort* Cube::indices = nullptr;
 
-Cube::Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh, nullptr)
+Cube::Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh, texture)
 {
 	rotation = 0.1f;
+	numberOfIndices = mesh->IndexCount * 3;
 
 	// Change from true -> OBJ file, false -> text file depending on what you want to display
 	SetIsObjectFile(false);
@@ -31,7 +33,10 @@ Cube::Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ
 	{
 		// Testing new cube with texture
 		SetFilePath((char*)"cube.txt");
-		Cube::Load(GetFilePath());
+		indexedVertices = mesh->Vertices;
+		indexedNormals = mesh->Normals;
+		indexedTextures = mesh->TexCoords;
+		indices = mesh->Indices;
 	}
 
 	setPolygonCount(GetPolyCount());
@@ -68,27 +73,17 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 	else
 	{
 		bool texturesLoaded = true;
-		int indexedIndicesCount = GetPolyCount();
+		//int indexedIndicesCount = GetPolyCount();
 		glEnableClientState(GL_VERTEX_ARRAY);
 		glEnableClientState(GL_COLOR_ARRAY);
-		glBindTexture(GL_TEXTURE_2D, _texture->GetTextureID());
+		//glBindTexture(GL_TEXTURE_2D, _texture->GetTextureID());
 		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
 		// Textures
-		glEnable(GL_TEXTURE_2D);
-		Texture2D* texture = new Texture2D();
-		texturesLoaded = texture->Load((char*)"./Other Files/stars.raw", 512, 512);
-
-		if (!texturesLoaded)
-		{
-			std::cerr << "Failed to load texture." << std::endl;
-			return;
-		}
-
-		glBindTexture(GL_TEXTURE_2D, texture->GetTextureID());
+		glBindTexture(GL_TEXTURE_2D, _texture->GetTextureID());
 
 		glVertexPointer(3, GL_FLOAT, 0, GetVertices());
-		glColorPointer(3, GL_FLOAT, 0, GetColours());
+		glNormalPointer(GL_FLOAT, 0, GetNormals());
 		//glTexCoordPointer(2, GL_FLOAT, 0, _mesh->TexCoords);
 		glTexCoordPointer(2, GL_FLOAT, 0, indexedTextures);
 
@@ -97,7 +92,8 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		glScalef(scale.x, scale.y, scale.z);
 		glRotatef(rotation, 0.0f, 1.0f, 1.0f);
 
-		glDrawElements(GL_TRIANGLES, indexedIndicesCount, GL_UNSIGNED_SHORT, GetIndices());
+		// _mesh->IndexCount is null reference
+		glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, GetIndices());
 		glPopMatrix();
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -113,55 +109,22 @@ void Cube::Update()
 
 bool Cube::Load(char* path)
 {
-
 	/// TODO: Delete the contents here and call the Mesh loader functions instead, this is just for testing purposes
 
-	Mesh* mesh = MeshLoader::Load(path);
+	//Mesh* mesh = MeshLoader::Load(path);
 
-	if (mesh)
-	{
-		// Use the loaded mesh data
-		// For example:
-		indexedVertices = mesh->Vertices;
-		indexedNormals = mesh->Normals;
-		indexedTextures =mesh->TexCoords;
-		indices = mesh->Indices;
-	}
-	else
-	{
-		std::cerr << "Failed to load mesh from: " << path << std::endl;
-		return false;
-	}
-
-	//std::ifstream inFile;
-	//inFile.open(path);
-	//if (!inFile.good())
+	//if (mesh)
 	//{
-	//	std::cerr << "Error opening file: " << path << std::endl;
+	// Use the loaded mesh data
+	// For example:
+
+	//		_mesh = mesh;
+	//}
+	//else
+	//{
+	//	std::cerr << "Failed to load mesh from: " << path << std::endl;
 	//	return false;
 	//}
-
-	//inFile >> numVertices;
-	//indexedVertices = new Vertex[numVertices];
-	//for (int i = 0; i < numVertices; i++)
-	//{
-	//	inFile >> indexedVertices[i].x >> indexedVertices[i].y >> indexedVertices[i].z;
-	//}
-
-	//inFile >> numColours;
-	//indexedColours = new Colour[numColours]; // Needs to be Textures
-	//for (int i = 0; i < numColours; i++)
-	//{
-	//	inFile >> indexedColours[i].r >> indexedColours[i].g >> indexedColours[i].b;
-	//}
-
-	//inFile >> numIndices;
-	//indices = new GLushort[numIndices];
-	//for (int i = 0; i < numIndices; i++)
-	//{
-	//	inFile >> indices[i];
-	//}
-
 	return true;
 }
 

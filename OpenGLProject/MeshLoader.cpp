@@ -25,6 +25,7 @@ namespace MeshLoader
 				inFile >> mesh.Vertices[i].x;
 				inFile >> mesh.Vertices[i].y;
 				inFile >> mesh.Vertices[i].z;
+				std::cout << "Vertices: x: " << mesh.Vertices[i].x << " y: " << mesh.Vertices[i].y << " z: " << mesh.Vertices[i].z << std::endl;
 			}
 		}
 	}
@@ -41,6 +42,7 @@ namespace MeshLoader
 				inFile >> mesh.Normals[i].x;
 				inFile >> mesh.Normals[i].y;
 				inFile >> mesh.Normals[i].z;
+				std::cout << "Normals: x: " << mesh.Normals[i].x << " y: " << mesh.Normals[i].y << " z: " << mesh.Normals[i].z << std::endl;
 			}
 		}
 	}
@@ -56,6 +58,7 @@ namespace MeshLoader
 			{
 				inFile >> mesh.TexCoords[i].u;
 				inFile >> mesh.TexCoords[i].v;
+				std::cout << "Texcoords: u: " << mesh.TexCoords[i].u << " v: " << mesh.TexCoords[i].v << std::endl;
 			}
 		}
 	}
@@ -70,6 +73,7 @@ namespace MeshLoader
 			for (int i = 0; i < mesh.IndexCount; i++)
 			{
 				inFile >> mesh.Indices[i];
+				std::cout << "indices:  " << mesh.Indices[i] << std::endl;
 			}
 		}
 	}
@@ -84,7 +88,7 @@ namespace MeshLoader
 
 		if (!inFile.good())
 		{
-			cerr << "Can't open texture file " << path << endl;
+			cerr << "Can't open mesh data file " << path << endl;
 			return nullptr;
 		}
 

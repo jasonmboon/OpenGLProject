@@ -25,7 +25,7 @@ public:
 
 	// Getters for static members
 	Vertex* GetVertices() { return indexedVertices; }
-	Colour* GetColours() { return indexedColours; }
+	Vector3* GetNormals() { return indexedNormals; }
 	GLushort* GetIndices() { return indices; }
 	int GetPolyCount() { return numIndices; }
 	int GetVertexCount() { return numVertices; }

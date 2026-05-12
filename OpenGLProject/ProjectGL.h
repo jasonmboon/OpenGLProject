@@ -7,6 +7,7 @@
 #include "Structures.h"
 #include "SceneObject.h"
 #include "Cube.h"
+#include "MeshLoader.h"
 
 #define REFRESHRATE 16
 
@@ -16,7 +17,6 @@ private:
 	//Private member variables and functions
 	Camera* camera;
 	Cube* cube;
-	Cube* cube2;
 	
 public:
 	//Constructor and Destructor
