@@ -36,18 +36,6 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	glEnable(GL_DEPTH_TEST); // Enable depth testing for correct z-ordering
 	glEnable(GL_CULL_FACE); // Enable back-face culling
 	glCullFace(GL_BACK); // Specify that back faces should be culled
-	//PolygonCount = 0;
-	//rotation = 0.0f;
-	GLUTCallbacks::Init(this);
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE);
-	glutInitWindowSize(800, 800);
-	glutCreateWindow("Simple OpenGL Program");
-	glutKeyboardFunc(GLUTCallbacks::Keyboard);
-	glutDisplayFunc(GLUTCallbacks::Display);
-	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
-	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
-	
 
 	//Texure loading test
 	glEnable(GL_TEXTURE_2D);
@@ -61,14 +49,42 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	}
 
 	// Camera
-	camera = new Camera();
+	if (camera == nullptr)
+	{
+		camera = new Camera();
+	}
+	else
+	{
+		std::cout << "Error, camera is not initialised!" << std::endl;
+	}
+	
 	camera->eye = { 0.0f, 0.0f, 3.0f };
 	camera->centre = { 0.0f, 0.0f, 0.0f };
 	camera->up = { 0.0f, 1.0f, 0.0f };	
 	
 	Mesh* cubeMesh = MeshLoader::Load((char*)"cube.txt");
 
-	cube = new Cube(cubeMesh, texture, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
+	if (cube == nullptr)
+	{
+		cube = new Cube(cubeMesh, texture, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
+	}
+	else
+	{
+		std::cout << "Error, cube is not initialised!" << std::endl;
+	}
+
+	GLUTCallbacks::Init(this);
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE);
+	glutInitWindowSize(800, 800);
+	glutCreateWindow("Simple OpenGL Program");
+	glutKeyboardFunc(GLUTCallbacks::Keyboard);
+	glutDisplayFunc(GLUTCallbacks::Display);
+	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
+	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
+	
+
+
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -104,7 +120,14 @@ void ProjectGL::Display()
 	glPushMatrix();
 
 	// Draw the image at the origin first, with a given scale second
-	cube->Draw(Vector3(0.0f, -0.2f, 0.0f), Vector3(0.05f, 0.05f, 0.05f));
+	if (cube != nullptr)
+	{
+		cube->Draw(Vector3(0.0f, -0.2f, 0.0f), Vector3(0.05f, 0.05f, 0.05f));
+	}
+	else
+	{
+		std::cout << "Error, cube is not initialised!" << std::endl;
+	}
 
 	glPopMatrix();
 

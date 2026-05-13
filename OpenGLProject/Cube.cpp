@@ -18,7 +18,7 @@ GLushort* Cube::indices = nullptr;
 Cube::Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ, float _scaleX, float _scaleY, float _scaleZ) : SceneObject(mesh, texture)
 {
 	rotation = 0.1f;
-	numberOfIndices = mesh->IndexCount * 3;
+	numberOfIndices = mesh->IndexCount;
 
 	// Change from true -> OBJ file, false -> text file depending on what you want to display
 	SetIsObjectFile(false);
@@ -84,8 +84,8 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 
 		glVertexPointer(3, GL_FLOAT, 0, GetVertices());
 		glNormalPointer(GL_FLOAT, 0, GetNormals());
-		//glTexCoordPointer(2, GL_FLOAT, 0, _mesh->TexCoords);
-		glTexCoordPointer(2, GL_FLOAT, 0, indexedTextures);
+		glTexCoordPointer(2, GL_FLOAT, 0, GetTexCoords());
+		
 
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
@@ -94,6 +94,7 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 
 		// _mesh->IndexCount is null reference
 		glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, GetIndices());
+		
 		glPopMatrix();
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);

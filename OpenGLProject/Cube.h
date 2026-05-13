@@ -27,6 +27,7 @@ public:
 	Vertex* GetVertices() { return indexedVertices; }
 	Vector3* GetNormals() { return indexedNormals; }
 	GLushort* GetIndices() { return indices; }
+	TexCoord* GetTexCoords() { return indexedTextures; }
 	int GetPolyCount() { return numIndices; }
 	int GetVertexCount() { return numVertices; }
 
