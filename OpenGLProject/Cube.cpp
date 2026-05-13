@@ -72,6 +72,7 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 	}
 	else
 	{
+
 		bool texturesLoaded = true;
 		//int indexedIndicesCount = GetPolyCount();
 		glEnableClientState(GL_VERTEX_ARRAY);
@@ -82,9 +83,13 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		// Textures
 		glBindTexture(GL_TEXTURE_2D, _texture->GetTextureID());
 
-		glVertexPointer(3, GL_FLOAT, 0, GetVertices());
-		glNormalPointer(GL_FLOAT, 0, GetNormals());
-		glTexCoordPointer(2, GL_FLOAT, 0, GetTexCoords());
+		//glVertexPointer(3, GL_FLOAT, 0, GetVertices());
+		//glNormalPointer(GL_FLOAT, 0, GetNormals());
+		//glTexCoordPointer(2, GL_FLOAT, 0, GetTexCoords());
+		
+		glVertexPointer(3, GL_FLOAT, 0, indexedVertices);
+		glNormalPointer(GL_FLOAT, 0, indexedNormals);
+		glTexCoordPointer(2, GL_FLOAT, 0, indexedTextures);
 		
 
 		glPushMatrix();
@@ -93,8 +98,10 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		glRotatef(rotation, 0.0f, 1.0f, 1.0f);
 
 		// _mesh->IndexCount is null reference
-		glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, GetIndices());
+		//glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, GetIndices());
 		
+		glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, indices);
+
 		glPopMatrix();
 
 		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
