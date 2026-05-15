@@ -97,6 +97,7 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		glScalef(scale.x, scale.y, scale.z);
 		glRotatef(rotation, 0.0f, 1.0f, 1.0f);
 
+
 		// _mesh->IndexCount is null reference
 		//glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, GetIndices());
 		

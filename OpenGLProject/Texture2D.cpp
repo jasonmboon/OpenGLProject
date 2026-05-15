@@ -46,7 +46,6 @@ bool Texture2D::Load(char* path, int width, int height)
 
 	// Generate and bind the texture
 	glGenTextures(1, &textureID);
-	
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	// set texure wrap mode

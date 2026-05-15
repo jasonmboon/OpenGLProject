@@ -112,9 +112,16 @@ void ProjectGL::Display()
 	
 	// Draw grid with grid size of 0.1 and 10 lines in each direction
 	//DrawGrid(0.1f, 10);
-	//setMaterial(&redShinyMaterial);
+	setMaterial(&redShinyMaterial);
 	
 	glPushMatrix();
+
+
+	glBegin(GL_POLYGON);
+	glTexCoord2f(0.0f, 0.0f); 	glVertex3f(&vertices[a].x);
+	glTexCoord2f(1.0f, 0.0f);	glVertex3f(&vertices[b].x);
+	glTexCoord2f(1.0f, 1.0f);	glVertex3f(&vertices[c].x);
+	glEnd();
 
 	// Draw the image at the origin first, with a given scale second
 	if (cube != nullptr)
