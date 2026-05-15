@@ -46,6 +46,7 @@ bool Texture2D::Load(char* path, int width, int height)
 
 	// Generate and bind the texture
 	glGenTextures(1, &textureID);
+	
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	// set texure wrap mode
@@ -58,7 +59,7 @@ bool Texture2D::Load(char* path, int width, int height)
 
 	// Upload the texture data to OpenGL
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_BGR_EXT, GL_UNSIGNED_BYTE, tempTextureData);
-
+	//glGenerateMipmap(GL_TEXTURE_2D);
 
 	delete[] tempTextureData;
 	return true;
