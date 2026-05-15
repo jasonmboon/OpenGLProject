@@ -66,7 +66,8 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 
 	if (cube == nullptr)
 	{
-		cube = new Cube(cubeMesh, texture, 0.3f, 0.3f, 0.3f, 1.3f, 1.3f, 1.3f);
+		std::cout << "Creating cube object." << std::endl;
+		cube = new Cube(cubeMesh, texture, 0.6f, 0.6f, 0.6f, 2.0f, 2.0f, 2.0f);
 	}
 	else
 	{
@@ -83,9 +84,6 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
 	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
 	
-
-
-
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glViewport(0, 0, 800, 800);
@@ -114,15 +112,15 @@ void ProjectGL::Display()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	
 	// Draw grid with grid size of 0.1 and 10 lines in each direction
-	DrawGrid(0.1f, 10);
-	setMaterial(&redShinyMaterial);
+	//DrawGrid(0.1f, 10);
+	//setMaterial(&redShinyMaterial);
 	
 	glPushMatrix();
 
 	// Draw the image at the origin first, with a given scale second
 	if (cube != nullptr)
 	{
-		cube->Draw(Vector3(0.0f, -0.2f, 0.0f), Vector3(0.05f, 0.05f, 0.05f));
+		cube->Draw(Vector3(0.0f, -0.0f, 0.0f), Vector3(0.2f, 0.2f, 0.2f));
 	}
 	else
 	{
