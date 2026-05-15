@@ -38,7 +38,6 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	glCullFace(GL_BACK); // Specify that back faces should be culled
 
 	//Texure loading test
-	glEnable(GL_TEXTURE_2D);
 	bool texturesLoaded = true;
 	Texture2D* texture = new Texture2D();
 	texturesLoaded = texture->Load((char*)"./Other Files/stars.raw", 512, 512);
