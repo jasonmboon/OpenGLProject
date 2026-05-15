@@ -91,6 +91,11 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		glNormalPointer(GL_FLOAT, 0, indexedNormals);
 		glTexCoordPointer(2, GL_FLOAT, 0, indexedTextures);
 		
+		glBegin(GL_POLYGON);
+			glTexCoord2f(&vertices[a].x); 	glVertex3f(-0.5f, -0.5f, 0.0f);
+			glTexCoord2f(&vertices[b].x); 	glVertex3f(0.5f, -0.5f, 0.0f);
+			glTexCoord2f(&vertices[c].x); 	glVertex3f(0.5f, 0.5f, 0.0f);
+		glEnd();
 
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
