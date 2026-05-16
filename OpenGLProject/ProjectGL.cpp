@@ -118,9 +118,9 @@ void ProjectGL::Display()
 
 
 	glBegin(GL_POLYGON);
-	glTexCoord2f(0.0f, 0.0f); 	glVertex3f(&vertices[a].x);
-	glTexCoord2f(1.0f, 0.0f);	glVertex3f(&vertices[b].x);
-	glTexCoord2f(1.0f, 1.0f);	glVertex3f(&vertices[c].x);
+	glTexCoord2f(0.0f, 0.0f); 	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 0.0f);	glVertex3f(0.0f, 0.0f, 0.0f);
+	glTexCoord2f(1.0f, 1.0f);	glVertex3f(0.0f, 0.0f, 0.0f);
 	glEnd();
 
 	// Draw the image at the origin first, with a given scale second
