@@ -32,10 +32,33 @@ float light0_pos[] = { 1.0f, 1.0f, 1.0f, 1.0f };
 
 ProjectGL::ProjectGL(int argc, char* argv[])
 {
+	GLUTCallbacks::Init(this);
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_DOUBLE);
+	glutInitWindowSize(800, 800);
+
+	glutCreateWindow("Simple OpenGL Program");
+	glutKeyboardFunc(GLUTCallbacks::Keyboard);
+	glutDisplayFunc(GLUTCallbacks::Display);
+	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
+	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
+	
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glViewport(0, 0, 800, 800);
+	gluPerspective(45.0, 1.0, 0.1, 1000.0);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_LIGHT0);
+	glMatrixMode(GL_MODELVIEW);
+	// end camera
+
+	setLight(&whiteLighting);
+	
 	glEnable(GL_TEXTURE_2D); // Enable 2D texturing
 	glEnable(GL_DEPTH_TEST); // Enable depth testing for correct z-ordering
 	glEnable(GL_CULL_FACE); // Enable back-face culling
 	glCullFace(GL_BACK); // Specify that back faces should be culled
+
 
 	//Texure loading test
 	bool texturesLoaded = true;
@@ -56,11 +79,11 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 	{
 		std::cout << "Error, camera is not initialised!" << std::endl;
 	}
-	
+
 	camera->eye = { 0.0f, 0.0f, 3.0f };
 	camera->centre = { 0.0f, 0.0f, 0.0f };
-	camera->up = { 0.0f, 1.0f, 0.0f };	
-	
+	camera->up = { 0.0f, 1.0f, 0.0f };
+
 	Mesh* cubeMesh = MeshLoader::Load((char*)"cube.txt");
 
 	if (cube == nullptr)
@@ -73,29 +96,6 @@ ProjectGL::ProjectGL(int argc, char* argv[])
 		std::cout << "Error, cube is not initialised!" << std::endl;
 	}
 
-	GLUTCallbacks::Init(this);
-	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE);
-	glutInitWindowSize(800, 800);
-	glutCreateWindow("Simple OpenGL Program");
-	glutKeyboardFunc(GLUTCallbacks::Keyboard);
-	glutDisplayFunc(GLUTCallbacks::Display);
-	glutTimerFunc(REFRESHRATE, GLUTCallbacks::Timer, REFRESHRATE);
-	glEnable(GL_NORMALIZE); // Enable automatic normalization of normals for correct lighting
-	
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	glViewport(0, 0, 800, 800);
-	gluPerspective(45.0, 1.0, 0.1, 1000.0);
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT0);
-	glMatrixMode(GL_MODELVIEW);
-	// end camera
-
-	setLight(&whiteLighting);
-	
-	glEnable(GL_CULL_FACE); // Enable back-face culling
-	glCullFace(GL_BACK); // Specify that back faces should be culled
 
 	glutMainLoop();
 }

@@ -33,6 +33,11 @@ Cube::Cube(Mesh* mesh, Texture2D* texture, float _posX, float _posY, float _posZ
 	{
 		// Testing new cube with texture
 		SetFilePath((char*)"cube.txt");
+		indexedVertices = new Vertex[mesh->VertexCount];
+		indexedNormals = new Vector3[mesh->NormalCount];
+		indexedTextures = new TexCoord[mesh->TexCoordCount];
+		indices = new GLushort[mesh->IndexCount];
+
 		indexedVertices = mesh->Vertices;
 		indexedNormals = mesh->Normals;
 		indexedTextures = mesh->TexCoords;
@@ -91,11 +96,6 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		glNormalPointer(GL_FLOAT, 0, indexedNormals);
 		glTexCoordPointer(2, GL_FLOAT, 0, indexedTextures);
 		
-		glBegin(GL_POLYGON);
-			glTexCoord2f(&vertices[a].x); 	glVertex3f(-0.5f, -0.5f, 0.0f);
-			glTexCoord2f(&vertices[b].x); 	glVertex3f(0.5f, -0.5f, 0.0f);
-			glTexCoord2f(&vertices[c].x); 	glVertex3f(0.5f, 0.5f, 0.0f);
-		glEnd();
 
 		glPushMatrix();
 		glTranslatef(position.x, position.y, position.z);
@@ -106,7 +106,15 @@ void Cube::Draw(Vector3 position, Vector3 scale)
 		// _mesh->IndexCount is null reference
 		//glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, GetIndices());
 		
-		glDrawElements(GL_TRIANGLES, numberOfIndices, GL_UNSIGNED_SHORT, indices);
+		//glDrawElements(GL_TRIANGLES, _mesh->IndexCount, GL_UNSIGNED_SHORT, _mesh->Indices);
+		glBegin(GL_TRIANGLES);
+		for (int i = 0; i < _mesh->IndexCount; i++)
+		{
+			glNormal3f(indexedNormals[indices[i]].x, indexedNormals[indices[i]].y, indexedNormals[indices[i]].z);
+			glTexCoord2f(indexedTextures[indices[i]].u, indexedTextures[indices[i]].v);
+			glVertex3f(indexedVertices[indices[i]].x, indexedVertices[indices[i]].y, indexedVertices[indices[i]].z);
+		}
+		glEnd();
 
 		glPopMatrix();
 
